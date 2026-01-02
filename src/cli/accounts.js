@@ -280,7 +280,7 @@ async function interactiveAdd(rl) {
     if (accounts.length > 0) {
         displayAccounts(accounts);
 
-        const choice = await rl.question('\n(a)dd new, (r)emove existing, or (f)resh start? [a/r/f]: ');
+        const choice = await rl.question('\n(a)dd new, (r)emove existing, (f)resh start, or (e)xit? [a/r/f/e]: ');
         const c = choice.toLowerCase();
 
         if (c === 'r') {
@@ -291,6 +291,9 @@ async function interactiveAdd(rl) {
             accounts.length = 0;
         } else if (c === 'a') {
             console.log('\nAdding to existing accounts.');
+        } else if (c === 'e') {
+            console.log('\nExiting...');
+            return; // Exit cleanly
         } else {
             console.log('\nInvalid choice, defaulting to add.');
         }
