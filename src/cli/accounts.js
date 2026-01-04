@@ -248,7 +248,7 @@ async function addAccountNoBrowser(existingAccounts, rl) {
     const input = await rl.question('Paste the callback URL or authorization code: ');
 
     try {
-        const { code, extractedState } = extractCodeFromInput(input);
+        const { code, state: extractedState } = extractCodeFromInput(input);
 
         // Validate state if present
         if (extractedState && extractedState !== state) {
@@ -460,6 +460,7 @@ async function main() {
 
     console.log('╔════════════════════════════════════════╗');
     console.log('║   Antigravity Proxy Account Manager    ║');
+    console.log('║   Use --no-browser for headless mode   ║');
     console.log('╚════════════════════════════════════════╝');
 
     const rl = createRL();
