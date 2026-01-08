@@ -71,8 +71,19 @@ export async function* sendMessageStream(anthropicRequest, accountManager, fallb
                 const accountCount = accountManager.getAccountCount();
                 logger.warn(`[CloudCode] All ${accountCount} account(s) rate-limited. Waiting ${formatDuration(allWaitMs)}...`);
                 await sleep(allWaitMs);
+
+                // Add small buffer after waiting to ensure rate limits have truly expired
+                await sleep(500);
                 accountManager.clearExpiredLimits();
                 account = accountManager.pickNext(model);
+
+                // If still no account after waiting, try optimistic reset
+                // This handles cases where the API rate limit is transient
+                if (!account) {
+                    logger.warn('[CloudCode] No account available after wait, attempting optimistic reset...');
+                    accountManager.resetAllRateLimits();
+                    account = accountManager.pickNext(model);
+                }
             }
 
             if (!account) {
@@ -264,10 +275,10 @@ export async function* sendMessageStream(anthropicRequest, accountManager, fallb
             }
 
             if (isNetworkError(error)) {
-                 logger.warn(`[CloudCode] Network error for ${account.email} (stream), trying next account... (${error.message})`);
-                 await sleep(1000); // Brief pause before retry
-                 accountManager.pickNext(model); // Advance to next account
-                 continue;
+                logger.warn(`[CloudCode] Network error for ${account.email} (stream), trying next account... (${error.message})`);
+                await sleep(1000); // Brief pause before retry
+                accountManager.pickNext(model); // Advance to next account
+                continue;
             }
 
             throw error;
