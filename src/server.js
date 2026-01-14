@@ -18,6 +18,7 @@ const __dirname = path.dirname(__filename);
 import { forceRefresh } from './auth/token-extractor.js';
 import { REQUEST_BODY_LIMIT } from './constants.js';
 import { AccountManager } from './account-manager/index.js';
+import { clearThinkingSignatureCache } from './format/signature-cache.js';
 import { formatDuration } from './utils/helpers.js';
 import { logger } from './utils/logger.js';
 import usageStats from './modules/usage-stats.js';
@@ -159,6 +160,16 @@ app.use((req, res, next) => {
         logger.info(`[${req.method}] ${req.path}`);
     }
     next();
+});
+
+/**
+ * Test endpoint - Clear thinking signature cache
+ * Used for testing cold cache scenarios in cross-model tests
+ */
+app.post('/test/clear-signature-cache', (req, res) => {
+    clearThinkingSignatureCache();
+    logger.debug('[Test] Cleared thinking signature cache');
+    res.json({ success: true, message: 'Thinking signature cache cleared' });
 });
 
 /**
