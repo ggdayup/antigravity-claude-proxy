@@ -139,7 +139,7 @@ export async function sendMessage(anthropicRequest, accountManager, fallbackEnab
                                 // Long-term quota exhaustion (> 10s) - switch to next account
                                 logger.info(`[CloudCode] Quota exhausted for ${account.email} (${formatDuration(resetMs)}), switching account...`);
                                 accountManager.markRateLimited(account.email, resetMs, model);
-                                eventManager.recordRateLimit(account.email, model, { resetMs, statusCode: 429 });
+                                eventManager.recordRateLimit(account.email, model, { resetMs, statusCode: 429, action: 'switch_account' });
                                 throw new Error(`QUOTA_EXHAUSTED: ${errorText}`);
                             } else {
                                 // Short-term rate limit (<= 10s) - wait and retry once
@@ -176,12 +176,12 @@ export async function sendMessage(anthropicRequest, accountManager, fallbackEnab
                                     const retryResetMs = parseResetTime(retryResponse, retryErrorText);
                                     logger.warn(`[CloudCode] Retry also failed, marking and switching...`);
                                     accountManager.markRateLimited(account.email, retryResetMs || waitMs, model);
-                                    eventManager.recordRateLimit(account.email, model, { resetMs: retryResetMs || waitMs, statusCode: 429, afterRetry: true });
+                                    eventManager.recordRateLimit(account.email, model, { resetMs: retryResetMs || waitMs, statusCode: 429, afterRetry: true, action: 'switch_account' });
                                     throw new Error(`RATE_LIMITED_AFTER_RETRY: ${retryErrorText}`);
                                 } else {
                                     // Already retried once, mark and switch
                                     accountManager.markRateLimited(account.email, waitMs, model);
-                                    eventManager.recordRateLimit(account.email, model, { resetMs: waitMs, statusCode: 429 });
+                                    eventManager.recordRateLimit(account.email, model, { resetMs: waitMs, statusCode: 429, action: 'switch_account' });
                                     throw new Error(`RATE_LIMITED: ${errorText}`);
                                 }
                             }
@@ -242,20 +242,30 @@ export async function sendMessage(anthropicRequest, accountManager, fallbackEnab
             if (isAuthError(error)) {
                 // Auth invalid - already marked, record health failure and continue to next account
                 accountManager.recordHealth(account.email, model, false, { message: 'Auth error', code: 401 });
-                eventManager.recordAuthFailure(account.email, model, { error: error.message });
+                eventManager.recordAuthFailure(account.email, model, { error: error.message, action: 'switch_account' });
                 logger.warn(`[CloudCode] Account ${account.email} has invalid credentials, trying next...`);
                 continue;
             }
             // Handle 5xx errors
             if (error.message.includes('API error 5') || error.message.includes('500') || error.message.includes('503')) {
-                accountManager.recordHealth(account.email, model, false, { message: 'Server error', code: 500 });
-                logger.warn(`[CloudCode] Account ${account.email} failed with 5xx error, trying next...`);
+                const statusCode = error.message.match(/5\d{2}/)?.[0] || '5xx';
+                accountManager.recordHealth(account.email, model, false, { message: 'Server error', code: statusCode });
+                eventManager.recordApiError(account.email, model, 'server_error', {
+                    statusCode,
+                    message: error.message,
+                    action: 'switch_account'
+                });
+                logger.warn(`[CloudCode] Account ${account.email} failed with ${statusCode} error, trying next...`);
                 accountManager.pickNext(model);
                 continue;
             }
 
             if (isNetworkError(error)) {
                 accountManager.recordHealth(account.email, model, false, { message: 'Network error', code: 'NETWORK' });
+                eventManager.recordApiError(account.email, model, 'network_error', {
+                    message: error.message,
+                    action: 'switch_account'
+                });
                 logger.warn(`[CloudCode] Network error for ${account.email}, trying next account... (${error.message})`);
                 await sleep(1000);
                 accountManager.pickNext(model);
@@ -264,6 +274,10 @@ export async function sendMessage(anthropicRequest, accountManager, fallbackEnab
 
             // Record health failure for other errors
             accountManager.recordHealth(account.email, model, false, error);
+            eventManager.recordApiError(account.email, model, 'unknown_error', {
+                message: error.message,
+                action: 'throw'
+            });
             throw error;
         }
     }

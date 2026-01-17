@@ -41,6 +41,7 @@ window.Components.logsViewer = () => ({
         activeIssues: 0,
         rateLimits: 0,
         authFailures: 0,
+        apiErrors: 0,
         errors: 0
     },
 
@@ -57,6 +58,7 @@ window.Components.logsViewer = () => ({
         request: true,
         rate_limit: true,
         auth_failure: true,
+        api_error: true,
         fallback: true,
         account_switch: true,
         health_change: true,
@@ -101,7 +103,7 @@ window.Components.logsViewer = () => ({
             // Problem-only mode: Show only WARN, ERROR, and critical event types
             if (this.onlyProblems) {
                 const isProblemLevel = level === 'ERROR' || level === 'WARN';
-                const isProblemType = ['rate_limit', 'auth_failure', 'fallback', 'health_change'].includes(log.type);
+                const isProblemType = ['rate_limit', 'auth_failure', 'api_error', 'fallback', 'health_change'].includes(log.type);
                 if (!isProblemLevel && !isProblemType) return false;
             } else {
                 // Standard level filter
@@ -160,6 +162,7 @@ window.Components.logsViewer = () => ({
 
         this.summary.rateLimits = recentLogs.filter(l => l.type === 'rate_limit').length;
         this.summary.authFailures = recentLogs.filter(l => l.type === 'auth_failure').length;
+        this.summary.apiErrors = recentLogs.filter(l => l.type === 'api_error').length;
         this.summary.errors = recentLogs.filter(l => l.level === 'ERROR').length;
     },
 
@@ -196,7 +199,7 @@ window.Components.logsViewer = () => ({
 
         // Reset all types to false, then enable the specific one
         Object.keys(this.filters).forEach(k => {
-            if (['request', 'rate_limit', 'auth_failure', 'fallback', 'account_switch', 'health_change', 'system'].includes(k)) {
+            if (['request', 'rate_limit', 'auth_failure', 'api_error', 'fallback', 'account_switch', 'health_change', 'system'].includes(k)) {
                 this.filters[k] = (k === type);
             }
         });
@@ -214,7 +217,7 @@ window.Components.logsViewer = () => ({
         this.filters.DEBUG = (level === 'DEBUG');
 
         // Enable all event types
-        ['request', 'rate_limit', 'auth_failure', 'fallback', 'account_switch', 'health_change', 'system'].forEach(k => {
+        ['request', 'rate_limit', 'auth_failure', 'api_error', 'fallback', 'account_switch', 'health_change', 'system'].forEach(k => {
             this.filters[k] = true;
         });
     },
@@ -222,7 +225,7 @@ window.Components.logsViewer = () => ({
     // Default filter state for comparison
     _defaultFilters: {
         INFO: true, WARN: true, ERROR: true, SUCCESS: true, DEBUG: false,
-        request: true, rate_limit: true, auth_failure: true, fallback: true,
+        request: true, rate_limit: true, auth_failure: true, api_error: true, fallback: true,
         account_switch: true, health_change: true, system: true
     },
 
@@ -268,7 +271,7 @@ window.Components.logsViewer = () => ({
 
     // Toggle all event types
     toggleAllTypes() {
-        const types = ['request', 'rate_limit', 'auth_failure', 'fallback', 'account_switch', 'health_change', 'system'];
+        const types = ['request', 'rate_limit', 'auth_failure', 'api_error', 'fallback', 'account_switch', 'health_change', 'system'];
         const allEnabled = types.every(t => this.filters[t]);
         types.forEach(t => {
             this.filters[t] = !allEnabled;

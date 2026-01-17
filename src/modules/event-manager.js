@@ -33,6 +33,7 @@ export const EventType = {
     REQUEST: 'request',           // Request completed (success or failure)
     RATE_LIMIT: 'rate_limit',     // Rate limit encountered
     AUTH_FAILURE: 'auth_failure', // Authentication failed
+    API_ERROR: 'api_error',       // API errors (5xx, network, unknown)
     FALLBACK: 'fallback',         // Model fallback triggered
     ACCOUNT_SWITCH: 'account_switch', // Account switched due to error
     HEALTH_CHANGE: 'health_change',   // Account×model health status changed
@@ -448,12 +449,21 @@ export function setupRoutes(router) {
  * Record a rate limit event
  */
 export function recordRateLimit(account, model, details = {}) {
+    // Format reset time for display if available
+    let resetInfo = '';
+    if (details.resetMs) {
+        const minutes = Math.ceil(details.resetMs / 60000);
+        resetInfo = minutes >= 60 ? `, reset in ${Math.round(minutes / 60)}h` : `, reset in ${minutes}m`;
+    }
+    const statusCode = details.statusCode ? ` (${details.statusCode})` : '';
+    const action = details.action ? ` → ${details.action}` : '';
+
     return record({
         type: EventType.RATE_LIMIT,
         account,
         model,
         severity: Severity.WARN,
-        message: `Rate limit hit for ${account} on ${model}`,
+        message: `Rate limit hit for ${account} on ${model}${statusCode}${resetInfo}${action}`,
         details
     });
 }
@@ -462,12 +472,14 @@ export function recordRateLimit(account, model, details = {}) {
  * Record an auth failure event
  */
 export function recordAuthFailure(account, model, details = {}) {
+    const action = details.action ? ` → ${details.action}` : '';
+
     return record({
         type: EventType.AUTH_FAILURE,
         account,
         model,
         severity: Severity.ERROR,
-        message: `Auth failure for ${account}`,
+        message: `Auth failure for ${account} on ${model}${action}`,
         details
     });
 }
@@ -531,6 +543,36 @@ export function recordRequest(requestId, account, model, success, latencyMs, det
     });
 }
 
+/**
+ * Record an API error event (5xx, network, unknown errors)
+ * @param {string} account - Account email
+ * @param {string} model - Model ID
+ * @param {string} errorType - Error category: 'server_error' | 'network_error' | 'unknown_error'
+ * @param {Object} details - Additional details
+ * @param {string} [details.statusCode] - HTTP status code (e.g., 500, 503)
+ * @param {string} [details.message] - Error message
+ * @param {string} [details.action] - Action taken (e.g., 'retry', 'switch_account', 'fallback')
+ */
+export function recordApiError(account, model, errorType, details = {}) {
+    const errorLabels = {
+        server_error: '5xx',
+        network_error: 'Network',
+        unknown_error: 'Unknown'
+    };
+    const label = errorLabels[errorType] || errorType;
+    const statusCode = details.statusCode ? ` (${details.statusCode})` : '';
+    const action = details.action ? ` → ${details.action}` : '';
+
+    return record({
+        type: EventType.API_ERROR,
+        account,
+        model,
+        severity: Severity.ERROR,
+        message: `${label} error for ${account} on ${model}${statusCode}${action}`,
+        details: { ...details, errorType }
+    });
+}
+
 export default {
     EventType,
     Severity,
@@ -547,5 +589,6 @@ export default {
     recordFallback,
     recordAccountSwitch,
     recordHealthChange,
-    recordRequest
+    recordRequest,
+    recordApiError
 };
