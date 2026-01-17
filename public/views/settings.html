@@ -956,17 +956,17 @@
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthWarnThreshold')">Warning Threshold</span>
-                                    <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="(healthConfig.warningThreshold || 70) + '%'"></span>
+                                    <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="(healthConfig.warningThreshold || 40) + '%'"></span>
                                 </label>
                                 <div class="flex gap-3 items-center">
                                     <input type="range" min="1" max="100" class="custom-range custom-range-yellow flex-1"
-                                        :value="healthConfig.warningThreshold || 70"
-                                        :style="`background-size: ${healthConfig.warningThreshold || 70}% 100%`"
+                                        :value="healthConfig.warningThreshold || 40"
+                                        :style="`background-size: ${healthConfig.warningThreshold || 40}% 100%`"
                                         @input="setWarnThreshold($event.target.value)"
                                         aria-label="Warning threshold slider">
                                     <input type="number" min="1" max="100"
                                         class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                        :value="healthConfig.warningThreshold || 70"
+                                        :value="healthConfig.warningThreshold || 40"
                                         @change="setWarnThreshold($event.target.value)"
                                         aria-label="Warning threshold value">
                                 </div>
@@ -976,17 +976,17 @@
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthCriticalThreshold')">Critical Threshold</span>
-                                    <span class="label-text-alt font-mono text-red-500 text-xs font-semibold" x-text="(healthConfig.criticalThreshold || 50) + '%'"></span>
+                                    <span class="label-text-alt font-mono text-red-500 text-xs font-semibold" x-text="(healthConfig.criticalThreshold || 25) + '%'"></span>
                                 </label>
                                 <div class="flex gap-3 items-center">
                                     <input type="range" min="1" max="100" class="custom-range custom-range-accent flex-1"
-                                        :value="healthConfig.criticalThreshold || 50"
-                                        :style="`background-size: ${healthConfig.criticalThreshold || 50}% 100%`"
+                                        :value="healthConfig.criticalThreshold || 25"
+                                        :style="`background-size: ${healthConfig.criticalThreshold || 25}% 100%`"
                                         @input="setCriticalThreshold($event.target.value)"
                                         aria-label="Critical threshold slider">
                                     <input type="number" min="1" max="100"
                                         class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                        :value="healthConfig.criticalThreshold || 50"
+                                        :value="healthConfig.criticalThreshold || 25"
                                         @change="setCriticalThreshold($event.target.value)"
                                         aria-label="Critical threshold value">
                                 </div>
@@ -1034,17 +1034,17 @@
                         <div class="form-control">
                             <label class="label pt-0">
                                 <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthEventRetention')">Retention Period</span>
-                                <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventRetentionDays || 7) + ' days'"></span>
+                                <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventRetentionDays || 30) + ' days'"></span>
                             </label>
                             <div class="flex gap-3 items-center">
                                 <input type="range" min="1" max="30" class="custom-range custom-range-purple flex-1"
-                                    :value="healthConfig.eventRetentionDays || 7"
-                                    :style="`background-size: ${((healthConfig.eventRetentionDays || 7) - 1) / 29 * 100}% 100%`"
+                                    :value="healthConfig.eventRetentionDays || 30"
+                                    :style="`background-size: ${((healthConfig.eventRetentionDays || 30) - 1) / 29 * 100}% 100%`"
                                     @input="setRetentionDays($event.target.value)"
                                     aria-label="Event retention days slider">
                                 <input type="number" min="1" max="30"
                                     class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="healthConfig.eventRetentionDays || 7"
+                                    :value="healthConfig.eventRetentionDays || 30"
                                     @change="setRetentionDays($event.target.value)"
                                     aria-label="Event retention days value">
                             </div>

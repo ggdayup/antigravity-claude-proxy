@@ -20,11 +20,11 @@ const DEFAULT_CONFIG = {
     health: {
         autoDisable: true,
         autoDisableThreshold: 5,     // consecutive failures
-        healthThresholdWarn: 70,     // % health score
-        healthThresholdCritical: 50, // % health score
+        healthThresholdWarn: 40,     // % health score (warn before Google's risky 10% quota)
+        healthThresholdCritical: 25, // % health score (buffer before suspension risk)
         autoRecovery: true,
         autoRecoveryHours: 24,
-        eventRetentionDays: 7,
+        eventRetentionDays: 30,      // 1 month retention
         eventMaxCount: 10000
     }
 };

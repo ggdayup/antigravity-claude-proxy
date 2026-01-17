@@ -15,17 +15,19 @@ const DEFAULT_CONFIG = {
     // Number of consecutive failures before auto-disabling
     consecutiveFailureThreshold: 5,
     // Health score threshold for warnings (percentage)
-    warningThreshold: 70,
+    // Set to 40% to warn before reaching Google's risky 10% quota threshold
+    warningThreshold: 40,
     // Health score threshold for critical (percentage)
-    criticalThreshold: 50,
+    // Set to 25% as a buffer before account suspension risk
+    criticalThreshold: 25,
     // Enable automatic disabling
     autoDisableEnabled: true,
     // Auto-recovery time in ms (24 hours)
     autoRecoveryMs: 24 * 60 * 60 * 1000,
     // Event retention: max number of events to keep
     eventMaxCount: 10000,
-    // Event retention: max age in days
-    eventRetentionDays: 7
+    // Event retention: max age in days (30 days = 1 month)
+    eventRetentionDays: 30
 };
 
 // Initialize config from main config.js or defaults
