@@ -857,54 +857,58 @@
             </div>
 
             <!-- Tab 4: Health Management -->
-            <div x-show="activeTab === 'health'" x-data="window.Components.serverConfig()"
-                class="space-y-6 max-w-2xl animate-fade-in pb-10">
+            <div x-show="activeTab === 'health'" x-data="window.Components.healthConfig()"
+                class="space-y-4 max-w-2xl animate-fade-in pb-10">
 
-                <!-- Auto Disable Settings -->
+                <!-- Section 1: Auto-Disable (失败保护) -->
                 <div class="view-card border-neon-green/20 bg-neon-green/5">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-neon-green/10 flex items-center justify-center text-neon-green">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-white mb-0.5" x-text="$store.global.t('tabHealth')">Auto-Disable System</h4>
-                            <p class="text-xs text-gray-500" x-text="$store.global.t('healthAutoDisableDesc')">Automatically disable failing account-model pairs</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="form-control">
-                            <div class="flex items-center justify-between">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-sm font-medium text-gray-200"
-                                        :class="healthConfig.autoDisableEnabled ? 'text-neon-green' : ''"
-                                        x-text="$store.global.t('healthAutoDisable')">Enable Auto-Disable</span>
-                                    <span class="text-[11px] text-gray-500" x-text="$store.global.t('healthAutoDisableDesc')">
-                                        Automatically disable failing account-model pairs</span>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer"
-                                        :checked="healthConfig.autoDisableEnabled === true"
-                                        @change="updateHealthConfig({ autoDisableEnabled: $el.checked })"
-                                        aria-label="Enable Auto-Disable toggle">
-                                    <div
-                                        class="w-9 h-5 bg-space-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-600 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon-green peer-checked:after:bg-white">
-                                    </div>
-                                </label>
+                    <!-- Accordion Header -->
+                    <button @click="toggleAccordion('autoDisable')"
+                        class="w-full flex items-center justify-between gap-4 cursor-pointer group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-neon-green/10 flex items-center justify-center text-neon-green">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="text-sm font-bold text-white mb-0.5" x-text="$store.global.t('autoDisableSection') || 'Auto-Disable'">Auto-Disable</h4>
+                                <p class="text-xs text-gray-500" x-text="$store.global.t('autoDisableSectionDesc')">Automatically disable failing account-model pairs</p>
                             </div>
                         </div>
+                        <svg class="w-5 h-5 text-gray-400 transition-transform duration-200" :class="accordions.autoDisable ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
 
-                        <div class="h-px bg-space-border/30 my-4"></div>
-
-                        <!-- Thresholds Section -->
+                    <!-- Accordion Content -->
+                    <div x-show="accordions.autoDisable" x-collapse class="mt-4">
                         <div class="space-y-4">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
-                                    x-text="$store.global.t('healthThresholds') || 'Threshold Settings'">Threshold Settings</span>
+                            <!-- Enable Toggle -->
+                            <div class="form-control">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-sm font-medium text-gray-200"
+                                            :class="healthConfig.autoDisableEnabled ? 'text-neon-green' : ''"
+                                            x-text="$store.global.t('healthAutoDisable')">Enable Auto-Disable</span>
+                                        <span class="text-[11px] text-gray-500" x-text="$store.global.t('healthAutoDisableDesc')">
+                                            Automatically disable failing account-model pairs</span>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer"
+                                            :checked="healthConfig.autoDisableEnabled === true"
+                                            @change="updateHealthConfig({ autoDisableEnabled: $el.checked })"
+                                            aria-label="Enable Auto-Disable toggle">
+                                        <div
+                                            class="w-9 h-5 bg-space-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-600 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neon-green peer-checked:after:bg-white">
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
 
+                            <div class="h-px bg-space-border/30 my-4"></div>
+
+                            <!-- Failure Threshold -->
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthThreshold')">Failure Threshold</span>
@@ -925,6 +929,7 @@
                                 <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthThresholdDesc')">Consecutive failures before disabling</p>
                             </div>
 
+                            <!-- Auto-Recovery Time -->
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthAutoRecovery')">Auto-Recovery Time</span>
@@ -945,14 +950,207 @@
                                 <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthAutoRecoveryDesc')">Time before re-enabling a disabled model</p>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Health Score Thresholds Section -->
-                        <div class="space-y-4 pt-2 border-t border-space-border/10">
+                <!-- Section 2: Quota Protection (配额保护) -->
+                <div class="view-card border-yellow-500/20 bg-yellow-500/5">
+                    <!-- Accordion Header -->
+                    <button @click="toggleAccordion('quotaProtection')"
+                        class="w-full flex items-center justify-between gap-4 cursor-pointer group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="text-sm font-bold text-white mb-0.5" x-text="$store.global.t('quotaProtectionSection') || 'Quota Protection'">Quota Protection</h4>
+                                <p class="text-xs text-gray-500" x-text="$store.global.t('quotaProtectionSectionDesc')">Proactive quota monitoring and protection</p>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 transition-transform duration-200" :class="accordions.quotaProtection ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <!-- Accordion Content -->
+                    <div x-show="accordions.quotaProtection" x-collapse class="mt-4">
+                        <div class="space-y-4">
+                            <!-- Enable Toggle -->
+                            <div class="form-control">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-sm font-medium text-gray-200"
+                                            :class="healthConfig.quotaThresholdEnabled ? 'text-yellow-500' : ''"
+                                            x-text="$store.global.t('quotaThresholdEnable') || 'Enable Quota Protection'">Enable Quota Protection</span>
+                                        <span class="text-[11px] text-gray-500" x-text="$store.global.t('quotaThresholdEnableDesc') || 'Auto-disable when quota falls below threshold'">
+                                            Auto-disable when quota falls below threshold</span>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer"
+                                            :checked="healthConfig.quotaThresholdEnabled === true"
+                                            @change="updateHealthConfig({ quotaThresholdEnabled: $el.checked })"
+                                            aria-label="Enable Quota Protection toggle">
+                                        <div
+                                            class="w-9 h-5 bg-space-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-600 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500 peer-checked:after:bg-white">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="h-px bg-space-border/30 my-4"></div>
+
+                            <!-- Quota Threshold -->
+                            <div class="form-control">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaThreshold') || 'Quota Threshold'">Quota Threshold</span>
+                                    <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="Math.round((healthConfig.quotaThreshold || 0.2) * 100) + '%'"></span>
+                                </label>
+                                <div class="flex gap-3 items-center">
+                                    <input type="range" min="5" max="50" class="custom-range custom-range-yellow flex-1"
+                                        :value="Math.round((healthConfig.quotaThreshold || 0.2) * 100)"
+                                        :style="`background-size: ${((healthConfig.quotaThreshold || 0.2) * 100 - 5) / 45 * 100}% 100%`"
+                                        @input="setQuotaThreshold($event.target.value)"
+                                        aria-label="Quota threshold slider">
+                                    <input type="number" min="5" max="50"
+                                        class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
+                                        :value="Math.round((healthConfig.quotaThreshold || 0.2) * 100)"
+                                        @change="setQuotaThreshold($event.target.value)"
+                                        aria-label="Quota threshold value">
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaThresholdDesc') || 'Disable when remaining quota falls to this percentage (Google suspends at ~10%)'">Disable when remaining quota falls to this percentage</p>
+                            </div>
+
+                            <!-- Polling Interval -->
+                            <div class="form-control" x-show="healthConfig.quotaThresholdEnabled">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaPollInterval') || 'Polling Interval'">Polling Interval</span>
+                                    <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000) + 'm'"></span>
+                                </label>
+                                <div class="flex gap-3 items-center">
+                                    <input type="range" min="1" max="60" class="custom-range custom-range-yellow flex-1"
+                                        :value="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000)"
+                                        :style="`background-size: ${((healthConfig.quotaPollIntervalMs || 300000) / 60000 - 1) / 59 * 100}% 100%`"
+                                        @input="setQuotaPollInterval($event.target.value)"
+                                        aria-label="Quota poll interval slider">
+                                    <input type="number" min="1" max="60"
+                                        class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
+                                        :value="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000)"
+                                        @change="setQuotaPollInterval($event.target.value)"
+                                        aria-label="Quota poll interval value">
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaPollIntervalDesc') || 'How often to poll Google for quota updates'">How often to poll Google for quota updates</p>
+                            </div>
+
+                            <!-- Recovery Mode -->
+                            <div class="form-control">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaRecoveryMode') || 'Recovery Mode'">Recovery Mode</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-xs flex-1 transition-all"
+                                        :class="(healthConfig.quotaRecoveryMode || 'reset_time') === 'reset_time' ? 'btn-warning' : 'btn-ghost border-space-border'"
+                                        @click="updateHealthConfig({ quotaRecoveryMode: 'reset_time' })">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span x-text="$store.global.t('quotaRecoveryReset') || 'Quota Reset'">Quota Reset</span>
+                                    </button>
+                                    <button class="btn btn-xs flex-1 transition-all"
+                                        :class="healthConfig.quotaRecoveryMode === 'fixed' ? 'btn-warning' : 'btn-ghost border-space-border'"
+                                        @click="updateHealthConfig({ quotaRecoveryMode: 'fixed' })">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span x-text="$store.global.t('quotaRecoveryFixed') || 'Fixed Time'">Fixed Time</span>
+                                    </button>
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaRecoveryModeDesc') || 'When to re-enable: at API quota reset time, or after fixed recovery hours'">When to re-enable disabled accounts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Issue Detection (问题检测) -->
+                <div class="view-card border-blue-500/20 bg-blue-500/5">
+                    <!-- Accordion Header -->
+                    <button @click="toggleAccordion('issueDetection')"
+                        class="w-full flex items-center justify-between gap-4 cursor-pointer group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="text-sm font-bold text-white mb-0.5" x-text="$store.global.t('issueDetection') || 'Issue Detection'">Issue Detection</h4>
+                                <p class="text-xs text-gray-500" x-text="$store.global.t('issueDetectionDesc') || 'Configure automatic issue management'">Configure automatic issue management</p>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 transition-transform duration-200" :class="accordions.issueDetection ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <!-- Accordion Content -->
+                    <div x-show="accordions.issueDetection" x-collapse class="mt-4">
+                        <div class="space-y-4">
+                            <!-- Auto-resolve Stale Issues -->
+                            <div class="form-control">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('staleIssueInterval') || 'Auto-resolve Stale Issues'">Auto-resolve Stale Issues</span>
+                                    <span class="label-text-alt font-mono text-blue-400 text-xs font-semibold" x-text="Math.round((healthConfig.staleIssueMs || 1800000) / 60000) + 'm'"></span>
+                                </label>
+                                <div class="flex gap-3 items-center">
+                                    <input type="range" min="5" max="120" class="custom-range custom-range-cyan flex-1"
+                                        :value="Math.round((healthConfig.staleIssueMs || 1800000) / 60000)"
+                                        :style="`background-size: ${((healthConfig.staleIssueMs || 1800000) / 60000 - 5) / 115 * 100}% 100%`"
+                                        @input="setStaleIssueInterval($event.target.value)"
+                                        aria-label="Stale issue interval slider">
+                                    <input type="number" min="5" max="120"
+                                        class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
+                                        :value="Math.round((healthConfig.staleIssueMs || 1800000) / 60000)"
+                                        @change="setStaleIssueInterval($event.target.value)"
+                                        aria-label="Stale issue interval value">
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('staleIssueDesc') || 'Automatically resolve issues that haven\\'t occurred for this duration'">Automatically resolve issues that haven't recurred</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Display & Storage (显示与存储) -->
+                <div class="view-card border-space-border/50">
+                    <!-- Accordion Header -->
+                    <button @click="toggleAccordion('displayStorage')"
+                        class="w-full flex items-center justify-between gap-4 cursor-pointer group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-neon-purple/10 flex items-center justify-center text-neon-purple">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-sm font-semibold text-gray-200" x-text="$store.global.t('displayStorage') || 'Display & Storage'">Display & Storage</span>
+                                <span class="text-[10px] text-gray-600 block" x-text="$store.global.t('displayStorageDesc') || 'Health score thresholds and data retention'">Health score thresholds and data retention</span>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 transition-transform duration-200" :class="accordions.displayStorage ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <!-- Accordion Content -->
+                    <div x-show="accordions.displayStorage" x-collapse class="mt-4">
+                        <div class="space-y-4">
+                            <!-- Health Score Thresholds Sub-section -->
                             <div class="flex items-center gap-2 mb-2">
                                 <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
                                     x-text="$store.global.t('healthScoreThresholds') || 'Health Score Alerts'">Health Score Alerts</span>
                             </div>
 
+                            <!-- Warning Threshold -->
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthWarnThreshold')">Warning Threshold</span>
@@ -973,6 +1171,7 @@
                                 <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthWarnDesc') || 'Health score below this triggers a warning indicator'">Health score below this triggers a warning indicator</p>
                             </div>
 
+                            <!-- Critical Threshold -->
                             <div class="form-control">
                                 <label class="label pt-0">
                                     <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthCriticalThreshold')">Critical Threshold</span>
@@ -992,188 +1191,56 @@
                                 </div>
                                 <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthCriticalDesc') || 'Health score below this triggers a critical alert'">Health score below this triggers a critical alert</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Quota Protection -->
-                <div class="view-card border-yellow-500/20 bg-yellow-500/5">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-white mb-0.5" x-text="$store.global.t('quotaProtection') || 'Quota Protection'">Quota Protection</h4>
-                            <p class="text-xs text-gray-500" x-text="$store.global.t('quotaProtectionDesc') || 'Protect accounts from Google suspension by limiting quota usage'">Protect accounts from Google suspension by limiting quota usage</p>
-                        </div>
-                    </div>
+                            <div class="h-px bg-space-border/30 my-4"></div>
 
-                    <div class="space-y-4">
-                        <div class="form-control">
-                            <div class="flex items-center justify-between">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-sm font-medium text-gray-200"
-                                        :class="healthConfig.quotaThresholdEnabled ? 'text-yellow-500' : ''"
-                                        x-text="$store.global.t('quotaThresholdEnable') || 'Enable Quota Protection'">Enable Quota Protection</span>
-                                    <span class="text-[11px] text-gray-500" x-text="$store.global.t('quotaThresholdEnableDesc') || 'Auto-disable when quota falls below threshold'">
-                                        Auto-disable when quota falls below threshold</span>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer"
-                                        :checked="healthConfig.quotaThresholdEnabled === true"
-                                        @change="updateHealthConfig({ quotaThresholdEnabled: $el.checked })"
-                                        aria-label="Enable Quota Protection toggle">
-                                    <div
-                                        class="w-9 h-5 bg-space-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-600 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500 peer-checked:after:bg-white">
-                                    </div>
+                            <!-- Data Retention Sub-section -->
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
+                                    x-text="$store.global.t('healthDataRetention') || 'Data Retention'">Data Retention</span>
+                            </div>
+
+                            <!-- Max Events -->
+                            <div class="form-control">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthMaxEvents')">Max Events</span>
+                                    <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventMaxCount || 10000).toLocaleString()"></span>
                                 </label>
+                                <div class="flex gap-3 items-center">
+                                    <input type="range" min="1000" max="50000" step="1000" class="custom-range custom-range-purple flex-1"
+                                        :value="healthConfig.eventMaxCount || 10000"
+                                        :style="`background-size: ${((healthConfig.eventMaxCount || 10000) - 1000) / 490}% 100%`"
+                                        @input="setMaxEvents($event.target.value)"
+                                        aria-label="Max events count slider">
+                                    <input type="number" min="1000" max="50000" step="1000"
+                                        class="input input-xs input-bordered w-20 bg-space-800 border-space-border text-white font-mono text-center"
+                                        :value="healthConfig.eventMaxCount || 10000"
+                                        @change="setMaxEvents($event.target.value)"
+                                        aria-label="Max events count value">
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthMaxEventsDesc') || 'Maximum number of events to keep in history'">Maximum number of events to keep in history</p>
                             </div>
-                        </div>
 
-                        <div class="h-px bg-space-border/30 my-4"></div>
-
-                        <div class="form-control">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaThreshold') || 'Quota Threshold'">Quota Threshold</span>
-                                <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="Math.round((healthConfig.quotaThreshold || 0.2) * 100) + '%'"></span>
-                            </label>
-                            <div class="flex gap-3 items-center">
-                                <input type="range" min="5" max="50" class="custom-range custom-range-yellow flex-1"
-                                    :value="Math.round((healthConfig.quotaThreshold || 0.2) * 100)"
-                                    :style="`background-size: ${((healthConfig.quotaThreshold || 0.2) * 100 - 5) / 45 * 100}% 100%`"
-                                    @input="setQuotaThreshold($event.target.value)"
-                                    aria-label="Quota threshold slider">
-                                <input type="number" min="5" max="50"
-                                    class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="Math.round((healthConfig.quotaThreshold || 0.2) * 100)"
-                                    @change="setQuotaThreshold($event.target.value)"
-                                    aria-label="Quota threshold value">
+                            <!-- Retention Period -->
+                            <div class="form-control">
+                                <label class="label pt-0">
+                                    <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthEventRetention')">Retention Period</span>
+                                    <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventRetentionDays || 30) + ' days'"></span>
+                                </label>
+                                <div class="flex gap-3 items-center">
+                                    <input type="range" min="1" max="30" class="custom-range custom-range-purple flex-1"
+                                        :value="healthConfig.eventRetentionDays || 30"
+                                        :style="`background-size: ${((healthConfig.eventRetentionDays || 30) - 1) / 29 * 100}% 100%`"
+                                        @input="setRetentionDays($event.target.value)"
+                                        aria-label="Event retention days slider">
+                                    <input type="number" min="1" max="30"
+                                        class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
+                                        :value="healthConfig.eventRetentionDays || 30"
+                                        @change="setRetentionDays($event.target.value)"
+                                        aria-label="Event retention days value">
+                                </div>
+                                <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthRetentionDesc') || 'Events older than this will be automatically deleted'">Events older than this will be automatically deleted</p>
                             </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaThresholdDesc') || 'Disable when remaining quota falls to this percentage (Google suspends at ~10%)'">Disable when remaining quota falls to this percentage (Google suspends at ~10%)</p>
-                        </div>
-
-                        <div class="form-control">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaRecoveryMode') || 'Recovery Mode'">Recovery Mode</span>
-                            </label>
-                            <div class="flex gap-2">
-                                <button class="btn btn-xs flex-1 transition-all"
-                                    :class="(healthConfig.quotaRecoveryMode || 'reset_time') === 'reset_time' ? 'btn-warning' : 'btn-ghost border-space-border'"
-                                    @click="updateHealthConfig({ quotaRecoveryMode: 'reset_time' })">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span x-text="$store.global.t('quotaRecoveryReset') || 'Quota Reset'">Quota Reset</span>
-                                </button>
-                                <button class="btn btn-xs flex-1 transition-all"
-                                    :class="healthConfig.quotaRecoveryMode === 'fixed' ? 'btn-warning' : 'btn-ghost border-space-border'"
-                                    @click="updateHealthConfig({ quotaRecoveryMode: 'fixed' })">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span x-text="$store.global.t('quotaRecoveryFixed') || 'Fixed Time'">Fixed Time</span>
-                                </button>
-                            </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaRecoveryModeDesc') || 'When to re-enable: at API quota reset time, or after fixed recovery hours'">When to re-enable: at API quota reset time, or after fixed recovery hours</p>
-                        </div>
-
-                        <div class="form-control" x-show="healthConfig.quotaThresholdEnabled">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('quotaPollInterval') || 'Polling Interval'">Polling Interval</span>
-                                <span class="label-text-alt font-mono text-yellow-500 text-xs font-semibold" x-text="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000) + 'm'"></span>
-                            </label>
-                            <div class="flex gap-3 items-center">
-                                <input type="range" min="1" max="60" class="custom-range custom-range-yellow flex-1"
-                                    :value="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000)"
-                                    :style="`background-size: ${((healthConfig.quotaPollIntervalMs || 300000) / 60000 - 1) / 59 * 100}% 100%`"
-                                    @input="setQuotaPollInterval($event.target.value)"
-                                    aria-label="Quota poll interval slider">
-                                <input type="number" min="1" max="60"
-                                    class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="Math.round((healthConfig.quotaPollIntervalMs || 300000) / 60000)"
-                                    @change="setQuotaPollInterval($event.target.value)"
-                                    aria-label="Quota poll interval value">
-                            </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('quotaPollIntervalDesc') || 'How often to poll Google for quota updates in the background'">How often to poll Google for quota updates in the background</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Data Retention -->
-                <div class="view-card border-space-border/50">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded bg-space-800 flex items-center justify-center text-neon-purple">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="text-sm font-semibold text-gray-200" x-text="$store.global.t('healthDataRetention')">Data Retention</span>
-                            <span class="text-[10px] text-gray-600 block" x-text="$store.global.t('healthDataRetentionDesc') || 'Configure event log storage and cleanup'">Configure event log storage and cleanup</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="form-control">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('staleIssueInterval') || 'Auto-resolve Stale Issues'">Auto-resolve Stale Issues</span>
-                                <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="Math.round((healthConfig.staleIssueMs || 1800000) / 60000) + 'm'"></span>
-                            </label>
-                            <div class="flex gap-3 items-center">
-                                <input type="range" min="5" max="120" class="custom-range custom-range-purple flex-1"
-                                    :value="Math.round((healthConfig.staleIssueMs || 1800000) / 60000)"
-                                    :style="`background-size: ${((healthConfig.staleIssueMs || 1800000) / 60000 - 5) / 115 * 100}% 100%`"
-                                    @input="setStaleIssueInterval($event.target.value)"
-                                    aria-label="Stale issue interval slider">
-                                <input type="number" min="5" max="120"
-                                    class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="Math.round((healthConfig.staleIssueMs || 1800000) / 60000)"
-                                    @change="setStaleIssueInterval($event.target.value)"
-                                    aria-label="Stale issue interval value">
-                            </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('staleIssueDesc') || 'Automatically resolve issues that haven\'t occurred for this duration'">Automatically resolve issues that haven't occurred for this duration</p>
-                        </div>
-
-                        <div class="form-control">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthMaxEvents')">Max Events</span>
-                                <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventMaxCount || 10000).toLocaleString()"></span>
-                            </label>
-                            <div class="flex gap-3 items-center">
-                                <input type="range" min="1000" max="50000" step="1000" class="custom-range custom-range-purple flex-1"
-                                    :value="healthConfig.eventMaxCount || 10000"
-                                    :style="`background-size: ${((healthConfig.eventMaxCount || 10000) - 1000) / 490}% 100%`"
-                                    @input="setMaxEvents($event.target.value)"
-                                    aria-label="Max events count slider">
-                                <input type="number" min="1000" max="50000" step="1000"
-                                    class="input input-xs input-bordered w-20 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="healthConfig.eventMaxCount || 10000"
-                                    @change="setMaxEvents($event.target.value)"
-                                    aria-label="Max events count value">
-                            </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthMaxEventsDesc') || 'Maximum number of events to keep in history'">Maximum number of events to keep in history</p>
-                        </div>
-
-                        <div class="form-control">
-                            <label class="label pt-0">
-                                <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('healthEventRetention')">Retention Period</span>
-                                <span class="label-text-alt font-mono text-neon-purple text-xs font-semibold" x-text="(healthConfig.eventRetentionDays || 30) + ' days'"></span>
-                            </label>
-                            <div class="flex gap-3 items-center">
-                                <input type="range" min="1" max="30" class="custom-range custom-range-purple flex-1"
-                                    :value="healthConfig.eventRetentionDays || 30"
-                                    :style="`background-size: ${((healthConfig.eventRetentionDays || 30) - 1) / 29 * 100}% 100%`"
-                                    @input="setRetentionDays($event.target.value)"
-                                    aria-label="Event retention days slider">
-                                <input type="number" min="1" max="30"
-                                    class="input input-xs input-bordered w-16 bg-space-800 border-space-border text-white font-mono text-center"
-                                    :value="healthConfig.eventRetentionDays || 30"
-                                    @change="setRetentionDays($event.target.value)"
-                                    aria-label="Event retention days value">
-                            </div>
-                            <p class="text-[9px] text-gray-600 mt-1 leading-tight" x-text="$store.global.t('healthRetentionDesc') || 'Events older than this will be automatically deleted'">Events older than this will be automatically deleted</p>
                         </div>
                     </div>
                 </div>
@@ -1267,11 +1334,20 @@
                             </label>
                         </div>
                     </div>
+                </div>
+
+                <!-- 👥 Account Pool Settings -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 mb-1 px-1">
+                        <span class="text-[10px] uppercase text-gray-500 font-bold tracking-widest"
+                            x-text="$store.global.t('accountPoolSettings') || 'Account Pool'">Account Pool</span>
+                        <div class="h-px flex-1 bg-space-border/30"></div>
+                    </div>
 
                     <!-- Max Accounts -->
                     <div class="form-control view-card border-space-border/50 hover:border-neon-cyan/50">
                         <label class="label pt-0">
-                            <span class="label-text text-gray-400 text-xs">Max Accounts</span>
+                            <span class="label-text text-gray-400 text-xs" x-text="$store.global.t('maxAccounts') || 'Max Accounts'">Max Accounts</span>
                             <span class="label-text-alt font-mono text-neon-cyan text-xs font-semibold"
                                 x-text="serverConfig.maxAccounts || 10"></span>
                         </label>
@@ -1287,18 +1363,10 @@
                                 @change="toggleMaxAccounts($event.target.value)"
                                 aria-label="Max accounts value">
                         </div>
-                        <span class="text-[11px] text-gray-500 mt-1">Maximum number of Google accounts allowed</span>
-                    </div>
-                </div>
-
-                <!-- 🔀 Account Selection Strategy -->
-                <div class="space-y-3">
-                    <div class="flex items-center gap-2 mb-1 px-1">
-                        <span class="text-[10px] uppercase text-gray-500 font-bold tracking-widest"
-                            x-text="$store.global.t('accountSelectionStrategy')">Account Selection Strategy</span>
-                        <div class="h-px flex-1 bg-space-border/30"></div>
+                        <span class="text-[11px] text-gray-500 mt-1" x-text="$store.global.t('maxAccountsDesc') || 'Maximum number of Google accounts allowed'">Maximum number of Google accounts allowed</span>
                     </div>
 
+                    <!-- Account Selection Strategy -->
                     <div class="form-control view-card border-space-border/50 hover:border-neon-cyan/50">
                         <div class="flex items-center justify-between">
                             <div class="flex flex-col gap-1 flex-1">

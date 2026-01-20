@@ -388,6 +388,30 @@ window.translations.en = {
     strategyUpdated: "Strategy updated to: {strategy}",
     failedToUpdateStrategy: "Failed to update strategy",
     invalidStrategy: "Invalid strategy selected",
+    // Account Pool Settings
+    accountPoolSettings: "Account Pool",
+    maxAccounts: "Max Accounts",
+    maxAccountsDesc: "Maximum number of Google accounts allowed",
+    // Health Tab Section Headers
+    autoDisableSection: "Auto-Disable",
+    autoDisableSectionDesc: "Automatically disable failing account-model pairs",
+    quotaProtectionSection: "Quota Protection",
+    quotaProtectionSectionDesc: "Proactive quota monitoring and protection",
+    issueDetection: "Issue Detection",
+    issueDetectionDesc: "Configure automatic issue management",
+    displayStorage: "Display & Storage",
+    displayStorageDesc: "Health score thresholds and data retention",
+    // Quota Protection Settings
+    quotaThresholdEnable: "Enable Quota Protection",
+    quotaThresholdEnableDesc: "Auto-disable when quota falls below threshold",
+    quotaThreshold: "Quota Threshold",
+    quotaThresholdDesc: "Disable when remaining quota falls to this percentage",
+    quotaRecoveryMode: "Recovery Mode",
+    quotaRecoveryReset: "Quota Reset",
+    quotaRecoveryFixed: "Fixed Time",
+    quotaRecoveryModeDesc: "When to re-enable: at API quota reset time, or after fixed recovery hours",
+    // Health Score Alerts
+    healthScoreThresholds: "Health Score Alerts",
     // Validation Messages
     mustBeValidNumber: "{fieldName} must be a valid number",
     mustBeAtLeast: "{fieldName} must be at least {min}",

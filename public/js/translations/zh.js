@@ -400,4 +400,28 @@ window.translations.zh = {
     strategyUpdated: "策略已更新为: {strategy}",
     failedToUpdateStrategy: "更新策略失败",
     invalidStrategy: "选择了无效的策略",
+    // 账户池设置
+    accountPoolSettings: "账户池",
+    maxAccounts: "最大账户数",
+    maxAccountsDesc: "允许的最大 Google 账户数量",
+    // Health Tab Section Headers
+    autoDisableSection: "失败保护",
+    autoDisableSectionDesc: "自动禁用连续失败的账号-模型组合",
+    quotaProtectionSection: "配额保护",
+    quotaProtectionSectionDesc: "主动监控和保护配额使用",
+    issueDetection: "问题检测",
+    issueDetectionDesc: "配置问题的自动管理",
+    displayStorage: "显示与存储",
+    displayStorageDesc: "健康分数阈值和数据保留策略",
+    // Quota Protection Settings
+    quotaThresholdEnable: "启用配额保护",
+    quotaThresholdEnableDesc: "当配额低于阈值时自动禁用",
+    quotaThreshold: "配额阈值",
+    quotaThresholdDesc: "当剩余配额降至此百分比时禁用",
+    quotaRecoveryMode: "恢复模式",
+    quotaRecoveryReset: "配额重置时",
+    quotaRecoveryFixed: "固定时间后",
+    quotaRecoveryModeDesc: "何时重新启用：在 API 配额重置时，或在固定恢复时间后",
+    // Health Score Alerts
+    healthScoreThresholds: "健康分数警报",
 };
