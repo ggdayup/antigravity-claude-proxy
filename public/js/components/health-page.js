@@ -23,6 +23,20 @@ window.Components.healthPage = () => ({
     activeFilter: null, // 'healthy', 'warning', 'critical', 'disabled'
     pollInterval: null,
 
+    // 浮动 Tooltip 状态
+    tooltip: {
+        show: false,
+        modelId: '',
+        score: 0,
+        success: 0,
+        failures: 0,
+        quotaDisabled: false,
+        quotaResetTime: null,
+        disabled: false,
+        x: 0,
+        y: 0
+    },
+
     // Models to display in the matrix - now from constants
     commonModels: window.AppConstants?.MODELS?.HEALTH_MONITOR_MODELS || [
         'claude-opus-4-5-thinking',
@@ -210,6 +224,48 @@ window.Components.healthPage = () => ({
 
     formatScore(score) {
         return score === undefined || score === null ? '-' : Math.round(score) + '%';
+    },
+
+    // Tooltip handlers
+    showTooltip(e, cell) {
+        this.tooltip.show = true;
+        this.tooltip.modelId = cell.modelId;
+        this.tooltip.score = cell.healthScore;
+        this.tooltip.success = cell.successCount;
+        this.tooltip.failures = cell.failCount;
+        this.tooltip.quotaDisabled = cell.quotaDisabled;
+        this.tooltip.quotaResetTime = cell.quotaResetTime;
+        this.tooltip.disabled = cell.disabled;
+
+        this.updateTooltipPosition(e);
+    },
+
+    updateTooltipPosition(e) {
+        // Offset from cursor
+        const offsetX = 15;
+        const offsetY = 15;
+
+        let x = e.clientX + offsetX;
+        let y = e.clientY + offsetY;
+
+        // Keep inside window bounds
+        const tooltipWidth = 200; // Estimated
+        const tooltipHeight = 150; // Estimated
+
+        if (x + tooltipWidth > window.innerWidth) {
+            x = e.clientX - tooltipWidth - offsetX;
+        }
+
+        if (y + tooltipHeight > window.innerHeight) {
+            y = e.clientY - tooltipHeight - offsetY;
+        }
+
+        this.tooltip.x = x;
+        this.tooltip.y = y;
+    },
+
+    hideTooltip() {
+        this.tooltip.show = false;
     },
 
     // Navigate to account details with health tab open

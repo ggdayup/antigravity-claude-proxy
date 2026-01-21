@@ -10,6 +10,20 @@ window.DashboardHealthMatrix.component = () => ({
     expanded: true, // Default to expanded for visibility, user can collapse
     pollInterval: null,
 
+    // 浮动 Tooltip 状态
+    tooltip: {
+        show: false,
+        modelId: '',
+        score: 0,
+        success: 0,
+        failures: 0,
+        quotaDisabled: false,
+        quotaResetTime: null,
+        disabled: false,
+        x: 0,
+        y: 0
+    },
+
     // Config
     commonModels: window.AppConstants?.MODELS?.HEALTH_MONITOR_MODELS || [
         'claude-opus-4-5-thinking',
@@ -110,6 +124,43 @@ window.DashboardHealthMatrix.component = () => ({
 
     formatScore(score) {
         return score === undefined || score === null ? '-' : Math.round(score) + '%';
+    },
+
+    // Tooltip handlers
+    showTooltip(e, cell) {
+        this.tooltip.show = true;
+        this.tooltip.modelId = cell.modelId;
+        this.tooltip.score = cell.healthScore;
+        this.tooltip.success = cell.successCount;
+        this.tooltip.failures = cell.failCount;
+        this.tooltip.quotaDisabled = cell.quotaDisabled;
+        this.tooltip.quotaResetTime = cell.quotaResetTime;
+        this.tooltip.disabled = cell.disabled;
+
+        this.updateTooltipPosition(e);
+    },
+
+    updateTooltipPosition(e) {
+        const offsetX = 15;
+        const offsetY = 15;
+        let x = e.clientX + offsetX;
+        let y = e.clientY + offsetY;
+        const tooltipWidth = 200;
+        const tooltipHeight = 150;
+
+        if (x + tooltipWidth > window.innerWidth) {
+            x = e.clientX - tooltipWidth - offsetX;
+        }
+        if (y + tooltipHeight > window.innerHeight) {
+            y = e.clientY - tooltipHeight - offsetY;
+        }
+
+        this.tooltip.x = x;
+        this.tooltip.y = y;
+    },
+
+    hideTooltip() {
+        this.tooltip.show = false;
     },
 
     // Navigate to account details for a specific cell

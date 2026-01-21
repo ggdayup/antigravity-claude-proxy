@@ -179,30 +179,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template x-for="row in matrix" :key="row.account">
+                    <template x-for="(row, rowIndex) in matrix" :key="row.account">
                         <tr class="group" :class="{'opacity-40 grayscale': activeFilter && !row.models.some(m => activeFilter === 'all' || (m.disabled ? activeFilter === 'disabled' : (m.healthScore >= 90 ? activeFilter === 'healthy' : (m.healthScore >= 70 ? activeFilter === 'warning' : activeFilter === 'critical'))))}">
                             <td class="p-3 text-gray-400 font-medium truncate max-w-[180px] sticky left-0 bg-space-900 group-hover:bg-space-800 transition-colors z-10 border-r border-space-border/30 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]"
                                 x-text="row.account"
                                 :title="row.account"></td>
-                            <template x-for="cell in row.models" :key="cell.modelId">
+                            <template x-for="(cell, cellIndex) in row.models" :key="cell.modelId">
                                 <td class="p-1.5 text-center">
                                     <div @click="viewAccountHealth(row.account)"
+                                         @mouseenter="showTooltip($event, cell)"
+                                         @mousemove="updateTooltipPosition($event)"
+                                         @mouseleave="hideTooltip()"
                                          class="w-full h-8 rounded flex items-center justify-center cursor-pointer border relative group/cell"
                                          :class="getHealthClass(cell)">
                                         <span class="font-bold text-[10px]" x-text="formatScore(cell.healthScore)"></span>
-
-                                        <!-- Tooltip -->
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/cell:block z-50 w-48 p-2 bg-space-900 border border-space-border rounded shadow-xl text-left pointer-events-none">
-                                            <div class="font-bold text-white mb-1" x-text="cell.modelId"></div>
-                                            <div class="text-[10px] space-y-0.5">
-                                                <div class="flex justify-between"><span class="text-gray-500" x-text="$store.global.t('score') + ':'">Score:</span> <span class="text-white" x-text="cell.healthScore + '%'"></span></div>
-                                                <div class="flex justify-between"><span class="text-gray-500" x-text="$store.global.t('success') + ':'">Success:</span> <span class="text-neon-green" x-text="cell.successCount"></span></div>
-                                                <div class="flex justify-between"><span class="text-gray-500" x-text="$store.global.t('failures') + ':'">Failures:</span> <span class="text-red-400" x-text="cell.failCount"></span></div>
-                                                <div x-show="cell.quotaDisabled" class="text-orange-500 font-bold mt-1">QUOTA LIMIT</div>
-                                                <div x-show="cell.quotaDisabled && cell.quotaResetTime" class="text-[9px] text-gray-500" x-text="'Resets: ' + new Date(cell.quotaResetTime).toLocaleString()"></div>
-                                                <div x-show="cell.disabled && !cell.quotaDisabled" class="text-red-500 font-bold mt-1" x-text="$store.global.t('disabled').toUpperCase()">DISABLED</div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </td>
                             </template>
@@ -221,6 +211,44 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Global Floating Tooltip -->
+    <div x-show="tooltip.show"
+         class="fixed z-[9999] w-52 p-2.5 bg-space-900 border border-space-border/80 rounded-lg shadow-2xl pointer-events-none transition-opacity duration-150 backdrop-blur-md"
+         :style="`left: ${tooltip.x}px; top: ${tooltip.y}px;`"
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95">
+        <div class="font-bold text-white text-xs mb-1.5 border-b border-space-border/50 pb-1 truncate" x-text="tooltip.modelId"></div>
+        <div class="text-[10px] space-y-1.5">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500" x-text="$store.global.t('score') + ':'">Score:</span>
+                <span class="font-mono font-bold" :class="tooltip.score >= 90 ? 'text-neon-green' : (tooltip.score >= 70 ? 'text-yellow-500' : 'text-red-400')" x-text="tooltip.score + '%'"></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500" x-text="$store.global.t('success') + ':'">Success:</span>
+                <span class="text-neon-green font-mono" x-text="tooltip.success"></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500" x-text="$store.global.t('failures') + ':'">Failures:</span>
+                <span class="text-red-400 font-mono" x-text="tooltip.failures"></span>
+            </div>
+            <div x-show="tooltip.quotaDisabled" class="pt-1 mt-1 border-t border-space-border/30">
+                <div class="text-orange-500 font-bold flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    QUOTA LIMIT
+                </div>
+                <div x-show="tooltip.quotaResetTime" class="text-[9px] text-gray-500 mt-0.5" x-text="'Resets: ' + new Date(tooltip.quotaResetTime).toLocaleString()"></div>
+            </div>
+            <div x-show="tooltip.disabled && !tooltip.quotaDisabled" class="pt-1 mt-1 border-t border-space-border/30 text-red-500 font-bold flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                <span x-text="$store.global.t('disabled').toUpperCase()">DISABLED</span>
+            </div>
         </div>
     </div>
 
