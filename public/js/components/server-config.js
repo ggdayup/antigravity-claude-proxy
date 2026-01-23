@@ -220,69 +220,69 @@ window.Components.serverConfig = () => ({
     // Individual toggle methods for each Advanced Tuning field with validation
     toggleMaxRetries(value) {
         const { MAX_RETRIES_MIN, MAX_RETRIES_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('maxRetries', value, 'Max Retries',
-            (v) => window.Validators.validateRange(v, MAX_RETRIES_MIN, MAX_RETRIES_MAX, 'Max Retries'));
+        this.saveConfigField('maxRetries', value, Alpine.store('global').t('maxRetries'),
+            (v) => window.Validators.validateRange(v, MAX_RETRIES_MIN, MAX_RETRIES_MAX, Alpine.store('global').t('maxRetries')));
     },
 
     toggleRetryBaseMs(value) {
         const { RETRY_BASE_MS_MIN, RETRY_BASE_MS_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('retryBaseMs', value, 'Retry Base Delay',
-            (v) => window.Validators.validateRange(v, RETRY_BASE_MS_MIN, RETRY_BASE_MS_MAX, 'Retry Base Delay'));
+        this.saveConfigField('retryBaseMs', value, Alpine.store('global').t('retryBaseDelay'),
+            (v) => window.Validators.validateRange(v, RETRY_BASE_MS_MIN, RETRY_BASE_MS_MAX, Alpine.store('global').t('retryBaseDelay')));
     },
 
     toggleRetryMaxMs(value) {
         const { RETRY_MAX_MS_MIN, RETRY_MAX_MS_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('retryMaxMs', value, 'Retry Max Delay',
-            (v) => window.Validators.validateRange(v, RETRY_MAX_MS_MIN, RETRY_MAX_MS_MAX, 'Retry Max Delay'));
+        this.saveConfigField('retryMaxMs', value, Alpine.store('global').t('retryMaxDelay'),
+            (v) => window.Validators.validateRange(v, RETRY_MAX_MS_MIN, RETRY_MAX_MS_MAX, Alpine.store('global').t('retryMaxDelay')));
     },
 
     toggleDefaultCooldownMs(value) {
         const { DEFAULT_COOLDOWN_MIN, DEFAULT_COOLDOWN_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('defaultCooldownMs', value, 'Default Cooldown',
+        this.saveConfigField('defaultCooldownMs', value, Alpine.store('global').t('defaultCooldown'),
             (v) => window.Validators.validateTimeout(v, DEFAULT_COOLDOWN_MIN, DEFAULT_COOLDOWN_MAX));
     },
 
     toggleMaxWaitBeforeErrorMs(value) {
         const { MAX_WAIT_MIN, MAX_WAIT_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('maxWaitBeforeErrorMs', value, 'Max Wait Threshold',
+        this.saveConfigField('maxWaitBeforeErrorMs', value, Alpine.store('global').t('maxWaitThreshold'),
             (v) => window.Validators.validateTimeout(v, MAX_WAIT_MIN, MAX_WAIT_MAX));
     },
 
     // Account Management Setters
     toggleMaxAccounts(value) {
         const { MAX_ACCOUNTS_MIN, MAX_ACCOUNTS_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('maxAccounts', value, 'Max Accounts',
-            (v) => window.Validators.validateRange(v, MAX_ACCOUNTS_MIN, MAX_ACCOUNTS_MAX, 'Max Accounts'));
+        this.saveConfigField('maxAccounts', value, Alpine.store('global').t('maxAccounts'),
+            (v) => window.Validators.validateRange(v, MAX_ACCOUNTS_MIN, MAX_ACCOUNTS_MAX, Alpine.store('global').t('maxAccounts')));
     },
 
     toggleRateLimitDedupWindowMs(value) {
         const { RATE_LIMIT_DEDUP_MIN, RATE_LIMIT_DEDUP_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('rateLimitDedupWindowMs', value, 'Rate Limit Dedup Window',
+        this.saveConfigField('rateLimitDedupWindowMs', value, Alpine.store('global').t('rateLimitDedupWindow'),
             (v) => window.Validators.validateTimeout(v, RATE_LIMIT_DEDUP_MIN, RATE_LIMIT_DEDUP_MAX));
     },
 
     toggleMaxConsecutiveFailures(value) {
         const { MAX_CONSECUTIVE_FAILURES_MIN, MAX_CONSECUTIVE_FAILURES_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('maxConsecutiveFailures', value, 'Max Consecutive Failures',
-            (v) => window.Validators.validateRange(v, MAX_CONSECUTIVE_FAILURES_MIN, MAX_CONSECUTIVE_FAILURES_MAX, 'Max Consecutive Failures'));
+        this.saveConfigField('maxConsecutiveFailures', value, Alpine.store('global').t('maxConsecutiveFailures'),
+            (v) => window.Validators.validateRange(v, MAX_CONSECUTIVE_FAILURES_MIN, MAX_CONSECUTIVE_FAILURES_MAX, Alpine.store('global').t('maxConsecutiveFailures')));
     },
 
     toggleExtendedCooldownMs(value) {
         const { EXTENDED_COOLDOWN_MIN, EXTENDED_COOLDOWN_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('extendedCooldownMs', value, 'Extended Cooldown',
+        this.saveConfigField('extendedCooldownMs', value, Alpine.store('global').t('extendedCooldown'),
             (v) => window.Validators.validateTimeout(v, EXTENDED_COOLDOWN_MIN, EXTENDED_COOLDOWN_MAX));
     },
 
     toggleCapacityRetryDelayMs(value) {
         const { CAPACITY_RETRY_DELAY_MIN, CAPACITY_RETRY_DELAY_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('capacityRetryDelayMs', value, 'Capacity Retry Delay',
+        this.saveConfigField('capacityRetryDelayMs', value, Alpine.store('global').t('capacityRetryDelay'),
             (v) => window.Validators.validateTimeout(v, CAPACITY_RETRY_DELAY_MIN, CAPACITY_RETRY_DELAY_MAX));
     },
 
     toggleMaxCapacityRetries(value) {
         const { MAX_CAPACITY_RETRIES_MIN, MAX_CAPACITY_RETRIES_MAX } = window.AppConstants.VALIDATION;
-        this.saveConfigField('maxCapacityRetries', value, 'Max Capacity Retries',
-            (v) => window.Validators.validateRange(v, MAX_CAPACITY_RETRIES_MIN, MAX_CAPACITY_RETRIES_MAX, 'Max Capacity Retries'));
+        this.saveConfigField('maxCapacityRetries', value, Alpine.store('global').t('maxCapacityRetries'),
+            (v) => window.Validators.validateRange(v, MAX_CAPACITY_RETRIES_MIN, MAX_CAPACITY_RETRIES_MAX, Alpine.store('global').t('maxCapacityRetries')));
     },
 
     // Toggle Account Selection Strategy

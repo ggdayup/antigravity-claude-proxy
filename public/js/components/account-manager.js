@@ -281,15 +281,16 @@ window.Components.accountManager = () => ({
      */
     timeAgo(isoString) {
         if (!isoString) return '-';
+        const t = Alpine.store('global').t;
         const date = new Date(isoString);
         const now = new Date();
         const diffMs = now - date;
         const diffMins = Math.round(diffMs / 60000);
 
-        if (diffMins < 1) return 'just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffMins < 1) return t('justNow');
+        if (diffMins < 60) return t('minutesAgo', { count: diffMins });
         const diffHours = Math.round(diffMins / 60);
-        if (diffHours < 24) return `${diffHours}h ago`;
-        return `${Math.round(diffHours / 24)}d ago`;
+        if (diffHours < 24) return t('hoursAgo', { count: diffHours });
+        return t('daysAgo', { count: Math.round(diffHours / 24) });
     }
 });

@@ -442,4 +442,26 @@ window.translations.en = {
     mustBeAtMost: "{fieldName} must be at most {max}",
     cannotBeEmpty: "{fieldName} cannot be empty",
     mustBeTrueOrFalse: "Value must be true or false",
+    // Added missing keys
+    issueResolved: "Issue resolved",
+    networkError: "Network error",
+    failedToResolveIssue: "Failed to resolve issue",
+    noLogsToCopy: "No logs to copy",
+    copiedLogs: "Copied {count} logs",
+    failedToCopy: "Failed to copy to clipboard",
+    noLogsToDownload: "No logs to download",
+    downloadedLogs: "Downloaded {count} logs",
+    healthMetricsReset: "Health metrics reset",
+    // Logs & Export
+    severity: "Severity",
+    toggleLabel: "toggle",
+    copyAsText: "Copy as Text",
+    copyAsJSON: "Copy as JSON",
+    downloadJSON: "Download .json",
+    rateLimits: "Rate Limits",
+    // Time ago
+    justNow: "just now",
+    minutesAgo: "{count}m ago",
+    hoursAgo: "{count}h ago",
+    daysAgo: "{count}d ago",
 };

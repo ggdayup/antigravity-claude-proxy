@@ -1,21 +1,13 @@
 /**
  * Indonesian (Bahasa Indonesia) Translations
- *
- * Panduan Terminologi IT:
- * - Istilah teknis umum tetap dalam bahasa Inggris (OAuth, API, token, proxy, debug, cache, dll.)
- * - Istilah UI umum diterjemahkan (Simpan, Hapus, Batal, dll.)
- * - Pesan error dan status menggunakan campuran yang konsisten
  */
 window.translations = window.translations || {};
 window.translations.id = {
-    // Navigation
     dashboard: "Dashboard",
     models: "Model",
     accounts: "Akun",
     logs: "Log",
     settings: "Pengaturan",
-
-    // Status
     online: "ONLINE",
     offline: "OFFLINE",
     totalAccounts: "TOTAL AKUN",
@@ -26,8 +18,6 @@ window.translations.id = {
     quotasDepletedTitle: "KUOTA HABIS",
     outOfTracked: "Dari {total} Terpantau",
     cooldown: "Cooldown",
-
-    // Search & Filters
     searchPlaceholder: "Cari model...",
     allAccounts: "Semua Akun",
     stat: "STATUS",
@@ -35,8 +25,6 @@ window.translations.id = {
     globalQuota: "KUOTA GLOBAL",
     nextReset: "RESET BERIKUTNYA",
     distribution: "DISTRIBUSI AKUN",
-
-    // System Configuration
     systemConfig: "Konfigurasi Sistem",
     language: "Bahasa",
     pollingInterval: "Interval Polling",
@@ -46,13 +34,10 @@ window.translations.id = {
     compactMode: "Mode Ringkas",
     compactModeDesc: "Tampilan tabel lebih padat untuk informasi lebih banyak.",
     saveChanges: "Simpan Perubahan",
-
-    // Logs
     autoScroll: "Auto-scroll",
     clearLogs: "Hapus Log",
-
-    // Account Management
     accountManagement: "Kelola Akun",
+    accountDetails: "Detail Akun",
     manageTokens: "Kelola token akun Google dan status otorisasi",
     addAccount: "Tambah Akun",
     status: "STATUS",
@@ -64,6 +49,7 @@ window.translations.id = {
     sessionState: "STATUS SESI",
     operations: "AKSI",
     delete: "Hapus",
+    fix: "Perbaiki",
     confirmDelete: "Yakin ingin menghapus akun ini?",
     cannotDeleteDatabase: "Tidak bisa dihapus: Akun ini dari database Antigravity (read-only)",
     connectGoogle: "Hubungkan Akun Google",
@@ -79,21 +65,15 @@ window.translations.id = {
     model: "Model",
     activeSuffix: "Aktif",
     manualReload: "Muat Ulang Konfigurasi",
-
-    // Tabs
     tabInterface: "Tampilan",
     tabClaude: "Claude CLI",
     tabModels: "Model",
     tabHealth: "Kesehatan",
     tabServer: "Server",
-
-    // Dashboard
     linkedAccounts: "Akun Terhubung",
     noSignal: "TIDAK ADA SINYAL",
     establishingUplink: "MENGHUBUNGKAN...",
     goToAccounts: "Lihat Akun",
-
-    // Settings - Models
     modelsDesc: "Atur visibilitas model, pin, dan routing request.",
     modelsPageDesc: "Kuota dan status real-time untuk semua model yang tersedia.",
     showHidden: "Tampilkan Model Tersembunyi",
@@ -107,8 +87,6 @@ window.translations.id = {
     noModels: "MODEL TIDAK DITEMUKAN",
     modelMappingHint: "Routing model di sisi server. Pengguna Claude Code: lihat tab 'Claude CLI' untuk pengaturan di sisi klien.",
     modelMapping: "Mapping (Target Model ID)",
-
-    // Settings - Claude
     proxyConnection: "Koneksi Proxy",
     modelSelection: "Pilihan Model",
     defaultModelAliases: "ALIAS MODEL DEFAULT",
@@ -118,8 +96,6 @@ window.translations.id = {
     claudeSettingsAlertPrefix: "Pengaturan di bawah langsung mengubah",
     claudeSettingsAlertSuffix: "Restart Claude CLI untuk menerapkan.",
     applyToClaude: "Simpan ke Claude CLI",
-
-    // Presets
     configPresets: "Preset Konfigurasi",
     saveAsPreset: "Simpan sebagai Preset",
     deletePreset: "Hapus Preset",
@@ -138,8 +114,6 @@ window.translations.id = {
     presetName: "Nama Preset",
     presetNamePlaceholder: "contoh: Setup Kantor",
     savePreset: "Simpan Preset",
-
-    // Settings - Server
     port: "Port",
     uiVersion: "Versi UI",
     debugMode: "Mode Debug",
@@ -149,8 +123,6 @@ window.translations.id = {
     reloadConfigTitle: "Muat Ulang Konfigurasi Akun",
     reloadConfigDesc: "Paksa muat ulang accounts.json dari disk",
     reload: "Muat Ulang",
-
-    // Config Specific
     primaryModel: "Model Utama",
     subAgentModel: "Model Sub-agent",
     advancedOverrides: "Timpa Model Default",
@@ -160,8 +132,6 @@ window.translations.id = {
     authToken: "Token Auth",
     saveConfig: "Simpan ke Claude CLI",
     envVar: "Env",
-
-    // System
     systemName: "ANTIGRAVITY",
     systemDesc: "CLAUDE PROXY SYSTEM",
     connectGoogleDesc: "Hubungkan akun Google Workspace untuk meningkatkan kuota API. Akun akan digunakan untuk meneruskan request Claude via Antigravity.",
@@ -185,8 +155,6 @@ window.translations.id = {
     noMatchingModels: "Tidak ada model yang cocok",
     typeToSearch: "Ketik untuk mencari...",
     or: "ATAU",
-
-    // Account Operations
     refreshingAccount: "Memperbarui {email}...",
     refreshedAccount: "{email} berhasil diperbarui",
     refreshFailed: "Gagal memperbarui",
@@ -198,8 +166,6 @@ window.translations.id = {
     deleteFailed: "Gagal menghapus",
     accountsReloaded: "Akun berhasil dimuat ulang",
     reloadFailed: "Gagal memuat ulang",
-
-    // Claude Config
     claudeConfigSaved: "Konfigurasi Claude tersimpan",
     claudeConfigRestored: "Claude CLI dikembalikan ke default",
     saveConfigFailed: "Gagal menyimpan konfigurasi",
@@ -208,16 +174,12 @@ window.translations.id = {
     confirmRestoreTitle: "Konfirmasi Reset",
     confirmRestoreMessage: "Yakin ingin mengembalikan Claude CLI ke pengaturan default? Konfigurasi proxy akan dihapus.",
     confirmRestore: "Ya, Reset",
-
-    // Status Labels
     claudeActive: "Claude Aktif",
     claudeEmpty: "Claude Kosong",
     geminiActive: "Gemini Aktif",
     geminiEmpty: "Gemini Kosong",
     synced: "SINKRON",
     syncing: "SINKRONISASI...",
-
-    // Time range labels
     last1Hour: "1 Jam Terakhir",
     last6Hours: "6 Jam Terakhir",
     last24Hours: "24 Jam Terakhir",
@@ -225,8 +187,6 @@ window.translations.id = {
     last30Days: "30 Hari Terakhir",
     allTime: "Semua Waktu",
     groupBy: "Kelompokkan",
-
-    // Additional
     reloading: "Memuat ulang...",
     reloaded: "Dimuat ulang",
     lines: "baris",
@@ -256,8 +216,6 @@ window.translations.id = {
     allCaps: "SEMUA",
     claudeCaps: "CLAUDE",
     geminiCaps: "GEMINI",
-
-    // System Info
     systemInfo: "Informasi Sistem",
     refresh: "Refresh",
     runtimeConfig: "Konfigurasi Runtime",
@@ -273,7 +231,6 @@ window.translations.id = {
     defaultCooldownDesc: "Cooldown bawaan jika API tidak memberikan waktu reset.",
     maxWaitThreshold: "Batas Tunggu Maksimal",
     maxWaitDesc: "Jika semua akun terkena rate limit lebih lama dari ini, langsung gagal.",
-    // Error Handling Tuning
     errorHandlingTuning: "Penyetelan Penanganan Error",
     rateLimitDedupWindow: "Jendela Deduplikasi Rate Limit",
     rateLimitDedupWindowDesc: "Mencegah badai retry ketika beberapa permintaan terkena rate limit bersamaan.",
@@ -287,8 +244,6 @@ window.translations.id = {
     maxCapacityRetriesDesc: "Maksimum retry untuk kehabisan kapasitas sebelum ganti akun.",
     saveConfigServer: "Simpan Konfigurasi",
     serverRestartAlert: "Tersimpan ke {path}. Restart server untuk menerapkan.",
-
-    // Password
     changePassword: "Ubah Password WebUI",
     changePasswordDesc: "Ubah password untuk akses dashboard ini",
     currentPassword: "Password Saat Ini",
@@ -300,15 +255,11 @@ window.translations.id = {
     cancel: "Batal",
     passwordsNotMatch: "Password tidak cocok",
     passwordTooShort: "Password minimal 6 karakter",
-
-    // Dashboard drill-down
     clickToViewAllAccounts: "Klik untuk lihat semua akun",
     clickToViewModels: "Klik untuk lihat halaman Model",
     clickToViewLimitedAccounts: "Klik untuk lihat akun yang dibatasi",
     clickToFilterClaude: "Klik untuk filter model Claude",
     clickToFilterGemini: "Klik untuk filter model Gemini",
-
-    // Accounts page
     searchAccounts: "Cari akun...",
     noAccountsYet: "Belum Ada Akun",
     noAccountsDesc: "Mulai dengan menambahkan akun Google via OAuth, atau gunakan perintah CLI untuk import kredensial.",
@@ -319,29 +270,21 @@ window.translations.id = {
     dangerousOperation: "⚠️ Operasi Berbahaya",
     confirmDeletePrompt: "Yakin ingin menghapus akun",
     deleteWarning: "⚠️ Tindakan ini tidak bisa dibatalkan. Semua pengaturan dan riwayat akan dihapus permanen.",
-
-    // OAuth progress
     oauthWaiting: "Menunggu otorisasi OAuth...",
     oauthWaitingDesc: "Silakan selesaikan autentikasi di jendela popup. Proses ini bisa memakan waktu hingga 2 menit.",
     oauthCancelled: "Otorisasi OAuth dibatalkan",
     oauthTimeout: "⏱️ Waktu otorisasi OAuth habis. Silakan coba lagi.",
     oauthWindowClosed: "Jendela OAuth ditutup. Otorisasi mungkin tidak lengkap.",
     cancelOAuth: "Batal",
-
-    // MCP CLI & Gemini 1M
     mcpCliExperimental: "MCP CLI (Eksperimental)",
     mcpCliDesc: "Aktifkan integrasi MCP eksperimental untuk penggunaan tool yang lebih stabil dengan konsumsi konteks lebih rendah.",
     gemini1mMode: "Mode Konteks Gemini 1M",
     gemini1mDesc: "Tambahkan suffix [1m] ke model Gemini untuk context window 1M.",
     gemini1mWarning: "⚠ Konteks besar dapat menurunkan performa Gemini-3-Pro.",
     clickToSet: "Klik untuk atur...",
-
-    // Quota Distribution
     quotaDistribution: "Distribusi Kuota",
     resetsIn: "Reset dalam {time}",
     noQuotaData: "Data kuota belum tersedia untuk akun ini.",
-
-    // Health Management
     healthAutoDisable: "Aktifkan Penonaktifan Otomatis",
     healthAutoDisableDesc: "Secara otomatis menonaktifkan model untuk akun setelah kegagalan berturut-turut.",
     healthThreshold: "Ambang Kegagalan",
@@ -355,7 +298,6 @@ window.translations.id = {
     healthEventRetention: "Retensi Peristiwa (Hari)",
     healthAnalyticsFetching: "MENGAMBIL ANALITIK KESEHATAN...",
     healthProTip: "Manajemen kesehatan memungkinkan Anda untuk mengaktifkan atau menonaktifkan model tertentu secara individu untuk akun ini. Jika model dinonaktifkan secara otomatis karena kegagalan berulang, Anda dapat mereset metriknya di sini.",
-    // Health Page
     healthMonitoring: "Pemantauan Kesehatan",
     healthMonitoringDesc: "Status Kesehatan Akun × Model",
     healthyPairs: "SEHAT",
@@ -377,7 +319,6 @@ window.translations.id = {
     activeIssues: "Masalah Aktif",
     resolve: "Selesaikan",
     issueResolved: "Masalah terselesaikan",
-    // Completed TODOs
     pageTitle: "Antigravity Console",
     live: "Live",
     tier: "Tier",
@@ -391,8 +332,6 @@ window.translations.id = {
     fix: "Perbaiki",
     privacy: "Privasi",
     privacyMode: "Mode Privasi (Samarkan Akun)",
-
-    // Error Messages
     operationFailed: "Operasi gagal",
     unknownError: "Error tidak diketahui",
     presetNameRequired: "Nama preset wajib diisi",
@@ -400,7 +339,6 @@ window.translations.id = {
     failedToSavePreset: "Gagal menyimpan preset",
     noPresetSelected: "Tidak ada preset dipilih",
     deletePresetConfirm: "Hapus preset \"{name}\"?",
-    deleteFailed: "Gagal menghapus",
     failedToDeletePreset: "Gagal menghapus preset",
     failedToChangePassword: "Gagal mengubah password",
     passwordChangedSuccess: "Password berhasil diubah",
@@ -414,15 +352,11 @@ window.translations.id = {
     failedToUpdateModelConfig: "Gagal memperbarui konfigurasi model",
     fieldUpdated: "{displayName} diubah menjadi {value}",
     failedToUpdateField: "Gagal memperbarui {displayName}",
-
-    // Validation
     mustBeValidNumber: "{fieldName} harus berupa angka valid",
     mustBeAtLeast: "{fieldName} minimal {min}",
     mustBeAtMost: "{fieldName} maksimal {max}",
     cannotBeEmpty: "{fieldName} tidak boleh kosong",
     mustBeTrueOrFalse: "Nilai harus true atau false",
-
-    // Account Selection Strategy translations
     accountSelectionStrategy: "Strategi Pemilihan Akun",
     selectionStrategy: "Strategi Pemilihan",
     strategyStickyLabel: "Tetap (Optimisasi Cache)",
@@ -434,18 +368,15 @@ window.translations.id = {
     strategyUpdated: "Strategi diubah ke: {strategy}",
     failedToUpdateStrategy: "Gagal memperbarui strategi",
     invalidStrategy: "Strategi tidak valid dipilih",
-    // Health Feature Additions
     quotaPollInterval: "Interval Polling",
     quotaPollIntervalDesc: "Seberapa sering polling ke Google untuk update kuota di latar belakang",
     staleIssueInterval: "Auto-resolve Masalah Lama",
     staleIssueDesc: "Otomatis menyelesaikan masalah yang tidak terjadi lagi dalam durasi ini",
     resolved: "Diselesaikan",
     acknowledged: "Diakui",
-    // Account Pool Settings
     accountPoolSettings: "Pool Akun",
     maxAccounts: "Maks Akun",
     maxAccountsDesc: "Jumlah maksimum akun Google yang diizinkan",
-    // Health Tab Section Headers
     autoDisableSection: "Auto-Disable",
     autoDisableSectionDesc: "Otomatis menonaktifkan pasangan akun-model yang gagal",
     quotaProtectionSection: "Proteksi Kuota",
@@ -454,7 +385,6 @@ window.translations.id = {
     issueDetectionDesc: "Konfigurasi manajemen masalah otomatis",
     displayStorage: "Tampilan & Penyimpanan",
     displayStorageDesc: "Ambang batas skor kesehatan dan retensi data",
-    // Quota Protection Settings
     quotaThresholdEnable: "Aktifkan Proteksi Kuota",
     quotaThresholdEnableDesc: "Auto-disable saat kuota di bawah ambang batas",
     quotaThreshold: "Ambang Kuota",
@@ -463,7 +393,6 @@ window.translations.id = {
     quotaRecoveryReset: "Reset Kuota",
     quotaRecoveryFixed: "Waktu Tetap",
     quotaRecoveryModeDesc: "Kapan mengaktifkan kembali: saat reset kuota API, atau setelah jam pemulihan tetap",
-    // Health Score Alerts
     healthScoreThresholds: "Peringatan Skor Kesehatan",
     problemsOnly: "Hanya Masalah",
     quick: "Cepat",
@@ -481,8 +410,26 @@ window.translations.id = {
     accountLabel: "Akun:",
     modelLabel: "Model:",
     suggestion: "Saran:",
-    successLabel: "Sukses:",
+    successLabel: "Berhasil:",
     failLabel: "Gagal:",
     streakLabel: "Beruntun:",
     noPresetsAvailable: "Tidak ada preset tersedia",
+    networkError: "Kesalahan jaringan",
+    failedToResolveIssue: "Gagal menyelesaikan masalah",
+    noLogsToCopy: "Tidak ada log untuk disalin",
+    copiedLogs: "Berhasil menyalin {count} log",
+    failedToCopy: "Gagal menyalin ke clipboard",
+    noLogsToDownload: "Tidak ada log untuk diunduh",
+    downloadedLogs: "Berhasil mengunduh {count} log",
+    healthMetricsReset: "Metrik kesehatan telah direset",
+    severity: "Tingkat Keparahan",
+    toggleLabel: "alihkan",
+    copyAsText: "Salin sebagai Teks",
+    copyAsJSON: "Salin sebagai JSON",
+    downloadJSON: "Unduh .json",
+    rateLimits: "Batas Kecepatan",
+    justNow: "baru saja",
+    minutesAgo: "{count}m yang lalu",
+    hoursAgo: "{count}j yang lalu",
+    daysAgo: "{count}h yang lalu",
 };
