@@ -18,13 +18,37 @@ window.Components.issueBanner = () => ({
             this.notifyUpdate(val.length);
         });
 
-        // Subscribe to global issue events if available, otherwise poll
-        // For now we'll use polling to keep it simple and robust
-        this.pollInterval = setInterval(() => {
-            if (!document.hidden) {
-                this.loadIssues(true); // Silent reload
+        // Setup visibility change listener for smart polling
+        this._visibilityHandler = () => {
+            if (document.hidden) {
+                this.stopPolling();
+            } else {
+                this.startPolling(); // Immediately refresh when tab becomes visible
             }
-        }, 5000);
+        };
+        document.addEventListener('visibilitychange', this._visibilityHandler);
+
+        // Start polling
+        this.startPolling();
+    },
+
+    startPolling() {
+        // Immediately load issues when starting/resuming polling
+        this.loadIssues(true);
+
+        // Start interval if not already running
+        if (!this.pollInterval) {
+            this.pollInterval = setInterval(() => {
+                this.loadIssues(true);
+            }, 5000);
+        }
+    },
+
+    stopPolling() {
+        if (this.pollInterval) {
+            clearInterval(this.pollInterval);
+            this.pollInterval = null;
+        }
     },
 
     notifyUpdate(count) {
@@ -35,7 +59,10 @@ window.Components.issueBanner = () => ({
 
     destroy() {
         // Called when component is removed
-        if (this.pollInterval) clearInterval(this.pollInterval);
+        this.stopPolling();
+        if (this._visibilityHandler) {
+            document.removeEventListener('visibilitychange', this._visibilityHandler);
+        }
     },
 
     async loadIssues(silent = false) {
