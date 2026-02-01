@@ -290,7 +290,7 @@ window.Components.serverConfig = () => ({
         }, window.AppConstants.INTERVALS.CONFIG_DEBOUNCE);
     },
 
-        toggleMaxAccounts(value) {
+    toggleMaxAccounts(value) {
         const { MAX_ACCOUNTS_MIN, MAX_ACCOUNTS_MAX } = window.AppConstants.VALIDATION;
         this.saveConfigField('maxAccounts', value, 'Max Accounts',
             (v) => window.Validators.validateRange(v, MAX_ACCOUNTS_MIN, MAX_ACCOUNTS_MAX, 'Max Accounts'));
