@@ -10,9 +10,11 @@ import {
     LOAD_CODE_ASSIST_ENDPOINTS,
     LOAD_CODE_ASSIST_HEADERS,
     getModelFamily,
-    MODEL_VALIDATION_CACHE_TTL_MS
+    MODEL_VALIDATION_CACHE_TTL_MS,
+    MODEL_COMPAT_MAP
 } from '../constants.js';
 import { logger } from '../utils/logger.js';
+import { fetchWithProxy } from '../utils/helpers.js';
 
 // Model validation cache
 const modelCache = {
@@ -39,20 +41,55 @@ function isSupportedModel(modelId) {
  * @returns {Promise<{object: string, data: Array<{id: string, object: string, created: number, owned_by: string, description: string}>}>} List of available models
  */
 export async function listModels(token) {
-    const data = await fetchAvailableModels(token);
-    if (!data || !data.models) {
-        return { object: 'list', data: [] };
+    let rawModels = {};
+    try {
+        const data = await fetchAvailableModels(token);
+        if (data && data.models) {
+            rawModels = data.models;
+        }
+    } catch (error) {
+        logger.warn(`[CloudCode] Using hardcoded fallback model list due to fetch error: ${error.message}`);
+        // Complete list of all Antigravity models with clear descriptions
+        rawModels = {
+            // Claude models
+            'claude-sonnet-3-5': { displayName: 'Claude 3.5 Sonnet' },
+            'claude-sonnet-4-5': { displayName: 'Claude 4.5 Sonnet' },
+            'claude-sonnet-4-5-thinking': { displayName: 'Claude 4.5 Sonnet (Thinking)' },
+            'claude-opus-4-5-thinking': { displayName: 'Claude 4.5 Opus (Thinking)' },
+            // Gemini 3 models
+            'gemini-3-flash': { displayName: 'Gemini 3 Flash - Fast' },
+            'gemini-3-pro-high': { displayName: 'Gemini 3 Pro High - Best Quality' },
+            'gemini-3-pro-low': { displayName: 'Gemini 3 Pro Low - Balanced' },
+            // Gemini 2.5 models
+            'gemini-2.5-pro': { displayName: 'Gemini 2.5 Pro' },
+            'gemini-2.5-flash': { displayName: 'Gemini 2.5 Flash' },
+            'gemini-2.5-flash-lite': { displayName: 'Gemini 2.5 Flash Lite' }
+        };
     }
 
-    const modelList = Object.entries(data.models)
+    const modelList = Object.entries(rawModels)
         .filter(([modelId]) => isSupportedModel(modelId))
         .map(([modelId, modelData]) => ({
-        id: modelId,
-        object: 'model',
-        created: Math.floor(Date.now() / 1000),
-        owned_by: 'anthropic',
-        description: modelData.displayName || modelId
-    }));
+            id: modelId,
+            object: 'model',
+            created: Math.floor(Date.now() / 1000),
+            owned_by: 'anthropic',
+            description: modelData.displayName || modelId
+        }));
+
+    // Add compatibility mappings as virtual models
+    // This ensures Claude Code sees the names it expects (e.g., claude-3-5-sonnet-latest)
+    for (const [aliasId, targetId] of Object.entries(MODEL_COMPAT_MAP)) {
+        if (!modelList.some(m => m.id === aliasId) && modelList.some(m => m.id === targetId)) {
+            modelList.push({
+                id: aliasId,
+                object: 'model',
+                created: Math.floor(Date.now() / 1000),
+                owned_by: 'anthropic',
+                description: `Alias for ${targetId}`
+            });
+        }
+    }
 
     // Warm the model validation cache
     modelCache.validModels = new Set(modelList.map(m => m.id));
@@ -85,7 +122,7 @@ export async function fetchAvailableModels(token, projectId = null) {
     for (const endpoint of ANTIGRAVITY_ENDPOINT_FALLBACKS) {
         try {
             const url = `${endpoint}/v1internal:fetchAvailableModels`;
-            const response = await fetch(url, {
+            const response = await fetchWithProxy(url, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(body)
@@ -177,7 +214,7 @@ export async function getSubscriptionTier(token) {
     for (const endpoint of LOAD_CODE_ASSIST_ENDPOINTS) {
         try {
             const url = `${endpoint}/v1internal:loadCodeAssist`;
-            const response = await fetch(url, {
+            const response = await fetchWithProxy(url, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({

@@ -9,10 +9,12 @@ import {
     ANTIGRAVITY_HEADERS,
     ANTIGRAVITY_SYSTEM_INSTRUCTION,
     getModelFamily,
-    isThinkingModel
+    isThinkingModel,
+    MODEL_COMPAT_MAP
 } from '../constants.js';
 import { convertAnthropicToGoogle } from '../format/index.js';
 import { deriveSessionId } from './session-manager.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Build the wrapped request body for Cloud Code API
@@ -22,8 +24,17 @@ import { deriveSessionId } from './session-manager.js';
  * @returns {Object} The Cloud Code API request payload
  */
 export function buildCloudCodeRequest(anthropicRequest, projectId) {
-    const model = anthropicRequest.model;
-    const googleRequest = convertAnthropicToGoogle(anthropicRequest);
+    let model = anthropicRequest.model;
+
+    // Apply model compatibility mapping for newer/unsupported model names
+    if (MODEL_COMPAT_MAP[model]) {
+        logger.debug(`[RequestBuilder] Mapping model ${model} -> ${MODEL_COMPAT_MAP[model]}`);
+        model = MODEL_COMPAT_MAP[model];
+    }
+
+    // Create a request copy with the mapped model name so converters see the correct family/type
+    const mappedRequest = { ...anthropicRequest, model };
+    const googleRequest = convertAnthropicToGoogle(mappedRequest);
 
     // Use stable session ID derived from first user message for cache continuity
     googleRequest.sessionId = deriveSessionId(anthropicRequest);

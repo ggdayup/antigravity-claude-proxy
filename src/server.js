@@ -15,7 +15,11 @@ import { config } from './config.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { forceRefresh } from './auth/token-extractor.js';
-import { REQUEST_BODY_LIMIT } from './constants.js';
+import {
+    GEMINI_SKIP_SIGNATURE,
+    MODEL_COMPAT_MAP,
+    REQUEST_BODY_LIMIT
+} from './constants.js';
 import { AccountManager } from './account-manager/index.js';
 import { clearThinkingSignatureCache } from './format/signature-cache.js';
 import { formatDuration } from './utils/helpers.js';
@@ -711,10 +715,18 @@ app.post('/v1/messages', async (req, res) => {
 
         // Resolve model mapping if configured
         let requestedModel = model || 'claude-3-5-sonnet-20241022';
+
+        // 1. Check hardcoded compatibility map
+        if (MODEL_COMPAT_MAP[requestedModel]) {
+            logger.debug(`[Server] Compatibility map: ${requestedModel} -> ${MODEL_COMPAT_MAP[requestedModel]}`);
+            requestedModel = MODEL_COMPAT_MAP[requestedModel];
+        }
+
+        // 2. Check dynamic config mapping
         const modelMapping = config.modelMapping || {};
         if (modelMapping[requestedModel] && modelMapping[requestedModel].mapping) {
             const targetModel = modelMapping[requestedModel].mapping;
-            logger.info(`[Server] Mapping model ${requestedModel} -> ${targetModel}`);
+            logger.info(`[Server] Config mapping: ${requestedModel} -> ${targetModel}`);
             requestedModel = targetModel;
         }
 
@@ -791,7 +803,7 @@ app.post('/v1/messages', async (req, res) => {
             try {
                 // Initialize the generator
                 const generator = sendMessageStream(request, accountManager, FALLBACK_ENABLED);
-                
+
                 // BUFFERING STRATEGY:
                 // Pull the first event *before* sending headers. 
                 // If this throws, we can safely send a 4xx/5xx error JSON.
@@ -816,7 +828,7 @@ app.post('/v1/messages', async (req, res) => {
                     res.write(`event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`);
                     if (res.flush) res.flush();
                 }
-                
+
                 res.end();
 
             } catch (error) {
@@ -824,7 +836,7 @@ app.post('/v1/messages', async (req, res) => {
                 if (!res.headersSent) {
                     logger.error('[API] Initial stream error:', error);
                     const { errorType, statusCode, errorMessage } = parseError(error);
-                    
+
                     return res.status(statusCode).json({
                         type: 'error',
                         error: {
@@ -833,7 +845,7 @@ app.post('/v1/messages', async (req, res) => {
                         }
                     });
                 }
-                
+
                 // If headers were already sent (should only happen if error occurs mid-stream),
                 // we have to fallback to SSE error event
                 logger.error('[API] Mid-stream error:', error);

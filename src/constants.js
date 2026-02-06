@@ -182,8 +182,12 @@ export function getModelFamily(modelName) {
  */
 export function isThinkingModel(modelName) {
     const lower = (modelName || '').toLowerCase();
-    // Claude thinking models have "thinking" in the name
-    if (lower.includes('claude') && lower.includes('thinking')) return true;
+    // Claude thinking models: explicit "thinking" in name, OR Claude version 4+
+    if (lower.includes('claude')) {
+        if (lower.includes('thinking')) return true;
+        const versionMatch = lower.match(/claude-(\d+)/);
+        if (versionMatch && parseInt(versionMatch[1], 10) >= 4) return true;
+    }
     // Gemini thinking models: explicit "thinking" in name, OR gemini version 3+
     if (lower.includes('gemini')) {
         if (lower.includes('thinking')) return true;
@@ -231,6 +235,29 @@ export const MODEL_FALLBACK_MAP = {
     'claude-opus-4-5-thinking': 'gemini-3-pro-high',
     'claude-sonnet-4-5-thinking': 'gemini-3-flash',
     'claude-sonnet-4-5': 'gemini-3-flash'
+};
+
+/**
+ * Model compatibility mapping - maps newer/preset model names to supported API IDs.
+ * Matches opencode-antigravity-auth compatibility layer.
+ */
+export const MODEL_COMPAT_MAP = {
+    // Sonnet mappings
+    'claude-sonnet-4-20250514': 'claude-sonnet-4-5-thinking',
+    'claude-sonnet-4': 'claude-sonnet-4-5-thinking',
+    'claude-3-5-sonnet-20241022': 'claude-sonnet-3-5',
+    'claude-3-5-sonnet-latest': 'claude-sonnet-3-5',
+    'claude-3-5-sonnet-20240620': 'claude-sonnet-3-5',
+    // Opus mappings
+    'claude-opus-4-20250514': 'claude-opus-4-5-thinking',
+    'claude-opus-4': 'claude-opus-4-5-thinking',
+    'claude-3-5-opus-latest': 'claude-opus-4-5-thinking',
+    'claude-3-opus-latest': 'claude-opus-4-5-thinking',
+    // Haiku mappings (map to lightweight models)
+    'claude-3-5-haiku-20241022': 'gemini-2.5-flash-lite',
+    'claude-3-5-haiku-latest': 'gemini-2.5-flash-lite',
+    'claude-3-haiku-20240307': 'gemini-2.5-flash-lite',
+    'claude-3-haiku-latest': 'gemini-2.5-flash-lite'
 };
 
 // Default test models for each family (used by test suite)

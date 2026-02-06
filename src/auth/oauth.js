@@ -15,6 +15,7 @@ import {
     OAUTH_REDIRECT_URI
 } from '../constants.js';
 import { logger } from '../utils/logger.js';
+import { fetchWithProxy } from '../utils/helpers.js';
 import { onboardUser, getDefaultTierId } from '../account-manager/onboarding.js';
 
 /**
@@ -280,8 +281,8 @@ export function startCallbackServer(expectedState, timeoutMs = 120000) {
                 const errMsg = err.code === 'EACCES'
                     ? `Permission denied on port ${port}`
                     : err.code === 'EADDRINUSE'
-                    ? `Port ${port} already in use`
-                    : `Failed to bind port ${port}: ${err.message}`;
+                        ? `Port ${port} already in use`
+                        : `Failed to bind port ${port}: ${err.message}`;
                 errors.push(errMsg);
                 logger.warn(`[OAuth] ${errMsg}`);
             }
@@ -353,7 +354,7 @@ Option 4: Exclude port from reservation (run as Administrator)
  * @returns {Promise<{accessToken: string, refreshToken: string, expiresIn: number}>} OAuth tokens
  */
 export async function exchangeCode(code, verifier) {
-    const response = await fetch(OAUTH_CONFIG.tokenUrl, {
+    const response = await fetchWithProxy(OAUTH_CONFIG.tokenUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -401,7 +402,7 @@ export async function refreshAccessToken(compositeRefresh) {
     // Parse the composite refresh token to extract the actual OAuth token
     const parts = parseRefreshParts(compositeRefresh);
 
-    const response = await fetch(OAUTH_CONFIG.tokenUrl, {
+    const response = await fetchWithProxy(OAUTH_CONFIG.tokenUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -433,7 +434,7 @@ export async function refreshAccessToken(compositeRefresh) {
  * @returns {Promise<string>} User's email address
  */
 export async function getUserEmail(accessToken) {
-    const response = await fetch(OAUTH_CONFIG.userInfoUrl, {
+    const response = await fetchWithProxy(OAUTH_CONFIG.userInfoUrl, {
         headers: {
             'Authorization': `Bearer ${accessToken}`
         }
@@ -460,7 +461,7 @@ export async function discoverProjectId(accessToken) {
 
     for (const endpoint of ANTIGRAVITY_ENDPOINT_FALLBACKS) {
         try {
-            const response = await fetch(`${endpoint}/v1internal:loadCodeAssist`, {
+            const response = await fetchWithProxy(`${endpoint}/v1internal:loadCodeAssist`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
